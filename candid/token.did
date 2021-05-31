@@ -20,9 +20,12 @@ type TransferResult = variant {
     Err: TransferError;
 };
 
+type NotificationRecipient = func (text) -> ();
+
 type NotifyArgs = record {
-    canister_id: principal;
-    method_name: text;
+    recipients : NotificationRecipient;
+    transaction_id : TransactionId;
+    metadata: text;
 };
 
 service : {
