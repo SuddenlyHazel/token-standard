@@ -20,9 +20,12 @@ type TransferResult = variant {
     Err: TransferError;
 };
 
+type NotificationRecipient = func (text) -> ();
+
 type NotifyArgs = record {
-    canister_id: principal;
-    method_name: text;
+    callback : NotificationRecipient;
+    transaction_id : TransactionId;
+    metadata: text;
 };
 
 service : {
@@ -49,7 +52,7 @@ service : {
     // The provided method on the canister will be called, see Notifiable Canisters candid, to
     // see the method signature.
     // Set the `from` argument if the caller is spending on behalf of someone else.
-    transfer: (record { from : opt principal; to: principal; amount: Nat; notify: opt NotifyArgs }) -> TransferResult;
+    transfer: (record { from : opt principal; to: principal; amount: Nat; notify: opt NotifyArgs }) -> (TransferResult);
 
     // Returns the amount an spender is allowed to spend on behalf of an account.
     // The result is defined as `Min(ActualAllowance, AccountBalance)`.
